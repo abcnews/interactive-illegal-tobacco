@@ -3,9 +3,10 @@
   import { Tween } from 'svelte/motion';
   import { scaleOrdinal, scaleTime, scaleLinear } from 'd3-scale';
   import { csvParse } from 'd3-dsv';
-  import { getMountValue, selectMounts } from '@abcnews/mount-utils';
   import { prefersReducedMotion } from '@abcnews/env-utils';
-  import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
+  import { untrack } from 'svelte';
+  import { cubicInOut } from 'svelte/easing';
 
   import FontProvider from './FontProvider.svelte'; // TODO Swap out for @abcnews/components-storylab version
   import AxisX from './layercake-components/AxisX.svg.svelte';
@@ -14,6 +15,7 @@
   import Arrows from './layercake-components/Arrows.svg.svelte';
   import BackgroundHighlight from './layercake-components/BackgroundHighlight.svelte';
   import Lines from './layercake-components/Lines.svg.svelte';
+  import Difference from './layercake-components/Difference.svg.svelte';
 
   import type {
     CustomLayerCakeContextType,
@@ -33,8 +35,6 @@
 
   import { visState } from '../lib/state.svelte';
   import { plotPadding } from '../lib/constants';
-  import { untrack } from 'svelte';
-  import { cubicInOut } from 'svelte/easing';
 
   interface Props {
     showConstructionMarks?: boolean;
@@ -188,7 +188,6 @@
   });
 
   $effect(() => {
-    console.log($prefersReducedMotion);
     if ($prefersReducedMotion) {
       tweenDuration = TWEEN_DURATION_REDUCED;
     } else {
@@ -229,9 +228,14 @@
     return Math.floor(chartWidth / (maxLabelLength * ESTIMATED_CHARACTER_WIDTH + TICK_LABEL_GAP));
   });
 
-  onMount(() => {
-    // console.log("Hello...")
+  let diffPairIds = $derived.by(() => {
+    const ids = series.map(s => s.id);
+    return ids.length >= 2 ? [ids[0], ids[1]] : null;
   });
+
+  $effect(() => {
+    console.log(diffPairIds)
+  })
 </script>
 
 <FontProvider>
@@ -278,6 +282,11 @@
         <AxisY ticks={yTicks || 4} format={formatLabelY} />
       </Svg>
       <Svg overflow="hidden">
+        {#if diffPairIds}
+          <g transition:fade>
+            <Difference idA={diffPairIds[0] ?? ''} idB={diffPairIds[1] ?? ''} fill="#ff00cc" />
+          </g>
+        {/if}
         <Lines />
       </Svg>
       <Html>
@@ -348,12 +357,12 @@
   }
 
   :global {
-      body {
-        overflow-x: clip !important;
-      }
-      body[data-newsapp] {
-        overflow: clip;
-        isolation: isolate;
-      }
+    body {
+      overflow-x: clip !important;
     }
+    body[data-newsapp] {
+      overflow: clip;
+      isolation: isolate;
+    }
+  }
 </style>

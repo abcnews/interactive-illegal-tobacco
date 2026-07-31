@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { line, curveCardinal, type CurveFactory } from 'd3-shape';
   import { type LayerCakeContextType, type LayerCakeGroupedDataGroupValuesType } from '../../lib/types';
   import { curveMap } from '../../lib/curves';
@@ -41,7 +42,7 @@
 
 <g class="line-group">
   {#each renderedLines as line (line.id || line)}
-    <g class="line" style:--line-dasharray={line.dasharray ? line.dasharray : undefined}>
+    <g class="line" style:--line-dasharray={line.dasharray ? line.dasharray : undefined} transition:fade>
       <path class="path-line outline" d={line.d}></path>
       <path class="path-line" d={line.d} stroke={line.stroke}></path>
     </g>

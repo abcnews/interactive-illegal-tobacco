@@ -235,8 +235,8 @@
     {#if customJsonError}
       <p style:color="red">{customJsonError}</p>
     {/if}
-    <button type="button" onclick={syncTextareaFromConfig}>Load config</button>
-    <button type="button" onclick={applyCustomJson}>Apply this config</button>
+    <button type="button" onclick={syncTextareaFromConfig}>Load config to text box</button>
+    <button type="button" onclick={applyCustomJson}>Apply config from text box</button>
 
   </fieldset>
   <details>

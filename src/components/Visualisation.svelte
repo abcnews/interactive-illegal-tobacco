@@ -228,14 +228,11 @@
     return Math.floor(chartWidth / (maxLabelLength * ESTIMATED_CHARACTER_WIDTH + TICK_LABEL_GAP));
   });
 
-  let diffPairIds = $derived.by(() => {
-    const ids = series.map(s => s.id);
-    return ids.length >= 2 ? [ids[0], ids[1]] : null;
-  });
+  let diffs = $derived(visState.config.diffs ?? []);
 
   $effect(() => {
-    console.log(diffPairIds)
-  })
+    console.log(diffs);
+  });
 </script>
 
 <FontProvider>
@@ -282,11 +279,11 @@
         <AxisY ticks={yTicks || 4} format={formatLabelY} />
       </Svg>
       <Svg overflow="hidden">
-        {#if diffPairIds}
-          <g transition:fade>
-            <Difference idA={diffPairIds[0] ?? ''} idB={diffPairIds[1] ?? ''} fill="#ff00cc" />
+        {#each diffs as diff (diff.idA + diff.idB)}
+          <g transition:fade|global>
+            <Difference idA={diff.idA} idB={diff.idB} fill={diff.fill} opacity={diff.opacity} />
           </g>
-        {/if}
+        {/each}
         <Lines />
       </Svg>
       <Html>

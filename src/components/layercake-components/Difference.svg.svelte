@@ -8,11 +8,12 @@
     idB: string;
     curve?: CurveFactory;
     fill?: string;
+    opacity?: number;
   }
 
   const { data, xScale, yScale } = getContext<LayerCakeContextType>('LayerCake');
 
-  let { idA, idB, curve, fill = '#888' }: Props = $props();
+  let { idA, idB, curve, fill = '#888', opacity = 0.3 }: Props = $props();
 
   const merged = $derived.by(() => {
     const seriesA = $data.find(d => d.config.id === idA)?.values ?? [];
@@ -48,12 +49,11 @@
 </script>
 
 <g class="area-diff">
-  <path class="path-area" d={pathD} {fill}></path>
+  <path class="path-area" d={pathD} {fill} style:fill-opacity={opacity}></path>
 </g>
 
 <style>
   .path-area {
     stroke: none;
-    fill-opacity: 0.3;
   }
 </style>

@@ -51,7 +51,7 @@
 </script>
 
 <g class="line-group">
-  {#each renderedLines as line (`${line.id}${line.d}`)}
+  {#each renderedLines as line (line.id || line)}
     <g class="line" style:--line-dasharray={line.dasharray ? line.dasharray : undefined} transition:fade>
       <path class="path-line outline" d={line.d}></path>
       <path class="path-line" d={line.d} stroke={line.stroke}></path>

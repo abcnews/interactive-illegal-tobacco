@@ -55,5 +55,6 @@
 <style>
   .path-area {
     stroke: none;
+    /*mix-blend-mode: multiply;*/
   }
 </style>

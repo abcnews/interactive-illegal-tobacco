@@ -229,10 +229,6 @@
   });
 
   let diffs = $derived(visState.config.diffs ?? []);
-
-  $effect(() => {
-    console.log(diffs);
-  });
 </script>
 
 <FontProvider>
@@ -267,6 +263,13 @@
       <Html>
         <BackgroundHighlight />
       </Html>
+      <Svg overflow="hidden">
+        {#each diffs as diff (diff.idA + diff.idB)}
+          <g transition:fade|global={{ duration: 100 }}>
+            <Difference idA={diff.idA} idB={diff.idB} fill={diff.fill} opacity={diff.opacity} />
+          </g>
+        {/each}
+      </Svg>
       <Svg>
         <AxisX
           gridlines={false}
@@ -279,11 +282,6 @@
         <AxisY ticks={yTicks || 4} format={formatLabelY} />
       </Svg>
       <Svg overflow="hidden">
-        {#each diffs as diff (diff.idA + diff.idB)}
-          <g transition:fade|global>
-            <Difference idA={diff.idA} idB={diff.idB} fill={diff.fill} opacity={diff.opacity} />
-          </g>
-        {/each}
         <Lines />
       </Svg>
       <Html>
@@ -318,8 +316,15 @@
   .visualisation {
     background: white;
     container-type: inline-size;
+
     /* MOBILE_MAX=462 */
+
+    // Shift a little bit on mobile
+    @media screen and (max-width: 991px) {
+      transform: translateX(-8px);
+    }
   }
+
   div {
     width: 100%;
     height: 100%;
@@ -357,6 +362,7 @@
     body {
       overflow-x: clip !important;
     }
+
     body[data-newsapp] {
       overflow: clip;
       isolation: isolate;

@@ -44,8 +44,6 @@
     // TODO: Fix this properly in the data diffing (data-accessors.ts probably)
     const deduped = Array.from(new Map(result.map(line => [line.id, line])).values());
 
-    console.log(deduped);
-
     return deduped;
   });
 </script>
@@ -63,7 +61,7 @@
   .path-line {
     fill: none;
     stroke-linejoin: round;
-    stroke-linecap: round;
+    stroke-linecap: butt;
     stroke-width: 3px;
     stroke-dasharray: var(--line-dasharray, none);
 
